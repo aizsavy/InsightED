@@ -1,7 +1,18 @@
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import 'flowbite';
+
+
+
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
 
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;800&display=swap");
+
+
 
 
 
@@ -103,25 +114,21 @@ body {
 /* ✅ Dashboard Styling */
 /* ✅ Ensure Sidebar & Dashboard Are Side by Side */
 /* ✅ Dashboard Styling */
+
+
 .dashboard-container {
-    flex: 1; /* Takes remaining space beside the sidebar */
-    min-height: 100vh; /* Full height */
+    flex: 1; /* Fills space beside sidebar */
+    min-height: 100vh;
     padding: 1.5rem;
-
-    color: rgb(117, 128, 231); /* Light text color */
-    position: relative;
-    margin-left: 18rem; /* Offset the dashboard to the right of the fixed sidebar (slightly increased) */
-    margin-top: -1490px; /* Use fixed pixels to prevent movement during zoom */
-    overflow: auto; /* Allow content to scroll if necessary */
-    display: flex; /* Use Flexbox for inner content */
-    flex-direction: column; /* Stack sections vertically */
-    font-size: 0.875rem; /* Reduce font size for more compact content */
-    background-image: url('https://4kwallpapers.com/images/wallpapers/macos-monterey-stock-black-dark-mode-layers-5k-2560x1440-5889.jpg'); /* Set the background to the GIF */
-    background-size: cover; /* Ensure the background covers the entire container */
-    background-position: center; /* Center the background image */
-   
+    color: rgb(117, 128, 231);
+    overflow: auto;
+    display: flex;
+    flex-direction: column;
+    font-size: 0.875rem;
+    background-image: url('https://4kwallpapers.com/images/wallpapers/macos-monterey-stock-black-dark-mode-layers-5k-2560x1440-5889.jpg');
+    background-size: cover;
+    background-position: center;
 }
-
 
 
 

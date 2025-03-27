@@ -1,320 +1,111 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>INSIGHTED - Student Personality Dashboard</title>
-    
-    <!-- External Libraries -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>InsightEd - Dashboard</title>
+    @vite(['resources/css/app.css', 'resources/js/app.jsx', 'resources/js/dashboard.js'])
+
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-    <link rel="stylesheet" href="{{ asset('css/styles.css') }}"> <!-- Load your styles.css -->
-    @vite(['resources/css/app.css']) <!-- Load Tailwind CSS -->
 </head>
-<body>
-    
-
-    <!-- Main Content -->
+<body class="bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-100">
+<div class="flex">
     <!-- Sidebar -->
-   
-    <!-- Sidebar -->
-     
-    <aside class="sidebar">
-    <body class="bg-gray-100 flex">
-    <!-- Title with Aurora Effect -->
-    <h1 class="title">InsightEd
-    <div class="aurora">
-      <div class="aurora__item"></div>
-      <div class="aurora__item"></div>
-      <div class="aurora__item"></div>
-      <div class="aurora__item"></div>
-    </div>
-  </h1>
-        <div class="space-y-4">
-            <!-- File Upload Section -->
-            <div id="dropzone" class="dropzone">
-                <input type="file" id="csvFile" class="hidden" accept=".csv">
-             <!-- Download Sample CSV Button with GIF -->
-<!-- Download Sample CSV Button with Custom CSS -->
-<button class="sidebar-secondary-button flex items-center">
-    <img src="{{ asset('css/download.gif') }}" alt="Download" class="download-gif mr-2">
-    Download Sample CSV
-</button>
-
-
-                <p class="mt-1 text-sm text-gray-600">Drop CSV or click to browse</p>
-            </div>
-
-            <!-- Status Indicator -->
-            <div class="status-indicator">
-                <div></div>
-                Ready to process data
-            </div>
-
-            <!-- Action Buttons -->
+    <aside class="w-64 min-h-screen bg-white dark:bg-gray-800 shadow-lg p-6 flex flex-col gap-6">
+        <div>
+            <h1 class="text-2xl font-extrabold text-blue-600 dark:text-blue-400 mb-6">InsightEd</h1>
             <div class="space-y-2">
-                <button class="sidebar-button" onclick="uploadCSV()">Upload & Process</button>
-                 <!-- Analyze All Button -->
- <!-- Analyze All Button with Inline CSS -->
-<button onclick="analyzeAll()" 
-        style="width: 100%; background-color:rgb(138, 37, 141); color: white; padding: 0.75rem 1rem; border-radius: 0.375rem; transition: background-color 0.2s;">
-    Analyze All
-</button>
-
-                <button class="sidebar-secondary-button" onclick="resetData()">
-                    
-
-
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v6h6M20 20v-6h-6M9 9l6 6"></path>
-                    </svg>
-                    Reset Data
-                </button>
+                <input type="file" id="csvFile" accept=".csv" class="hidden" />
+                <button onclick="document.getElementById('csvFile').click()" class="w-full bg-gray-200 dark:bg-gray-600 py-2 rounded-md text-sm">Choose File</button>
+                <button onclick="uploadCSV()" class="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600">Upload & Process</button>
+                <button onclick="analyzeAll()" class="w-full bg-purple-600 text-white py-2 rounded-md hover:bg-purple-700">Analyze All</button>
+                <button onclick="resetData()" class="w-full bg-gray-300 dark:bg-gray-600 py-2 rounded-md hover:bg-gray-400 dark:hover:bg-gray-500">Reset Data</button>
             </div>
+        </div>
+        <div class="mt-4">
+            <label class="inline-flex items-center cursor-pointer">
+                <input type="checkbox" onchange="toggleDarkMode()" class="sr-only peer">
+                <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600"></div>
+                <span class="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">Dark Mode</span>
+            </label>
         </div>
     </aside>
 
-     <!-- Dashboard Content with Background -->
-     <main class="dashboard-container pattern-wavy">
-            <h2 class="text-xl font-semibold text-gray-800 mb-4"></h2>
-
-            <div class="dashboard-section">
-                <h3>Total Surveys: <span id="totalSurveys">0</span></h3>
+    <!-- Main Content -->
+    <main class="flex-1 p-8 space-y-6">
+        <!-- Summary Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-4 text-center">
+                <h4 class="text-gray-500 dark:text-gray-400 text-sm">Total Surveys</h4>
+                <p id="totalSurveys" class="text-2xl font-bold">0</p>
             </div>
-
-            <div class="dashboard-section">
-                <h3>Students</h3>
-                <ul id="studentList"></ul>
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-4 text-center">
+                <h4 class="text-gray-500 dark:text-gray-400 text-sm">Traits Analyzed</h4>
+                <p class="text-2xl font-bold">5</p>
             </div>
-             
-
-
-            <div class="dashboard-section">
-  <div class="dashboard-section">
-    <h3>Analysis Result</h3>
-    <div class="analysis-result">
-        <!-- Left Part of the Analysis Result -->
-        <div id="analysisResult" class="left-container">
-            <!-- Content will be dynamically added here -->
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-4 text-center">
+                <h4 class="text-gray-500 dark:text-gray-400 text-sm">Most Common Trait</h4>
+                <p id="dominantTrait" class="text-xl font-semibold text-purple-600 dark:text-purple-400">Loading...</p>
+            </div>
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-4 text-center">
+                <h4 class="text-gray-500 dark:text-gray-400 text-sm">Last Upload</h4>
+                <p class="text-xl font-semibold">--</p>
+            </div>
         </div>
 
-        <!-- Right Part of the Analysis Result (Medium-Sized Container) -->
-        <div id="dominantTraitContainer" class="right-container">
-            <h3>Most Dominant Trait:</h3>
-            <p id="dominantTrait">Loading...</p>
-        </div>
-    </div>
+        <!-- Student Table -->
+<div class="relative overflow-x-auto shadow-md sm:rounded-lg bg-white dark:bg-gray-800">
+    <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+        <caption class="p-5 text-lg font-semibold text-left rtl:text-right text-gray-900 bg-white dark:text-white dark:bg-gray-800">
+            Student List
+            <p class="mt-1 text-sm font-normal text-gray-500 dark:text-gray-400">
+                Click on any student to view their personality result.
+            </p>
+        </caption>
+        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+            <tr>
+                <th class="px-6 py-3">ID Number</th>
+                <th class="px-6 py-3">Student Name</th>
+                <th class="px-6 py-3">Age</th>
+                <th class="px-6 py-3 text-right">Analyze</th>
+            </tr>
+        </thead>
+        <tbody id="studentTableBody"></tbody>
+    </table>
+
+    <!-- Pagination Controls -->
+    <div class="flex justify-end p-4 space-x-2" id="paginationControls"></div>
 </div>
 
 
 
-            <div class="dashboard-section">
-                <h3>AI Recommendations</h3>
-                <div id="recommendations"></div>
+            <!-- Chart Area -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-4">
+                <h3 class="font-semibold mb-2">Trait Distribution</h3>
+                <canvas id="barChart" height="200"></canvas>
             </div>
-
-            <div class="dashboard-section dashboard-chart">
-                <h3></h3>
-                <canvas id="barChart"></canvas>
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-4">
+                <h3 class="font-semibold mb-2">Dominant Trait Breakdown</h3>
+                <canvas id="pieChart" height="200"></canvas>
             </div>
-        </main>
+        </div>
 
+        <!-- Recommendations -->
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-4">
+            <h3 class="text-lg font-semibold text-blue-600 border-l-4 border-blue-500 pl-2">AI–Generated Teaching Strategies</h3>
+            <div id="recommendations" class="mt-2 text-sm text-gray-700 dark:text-gray-200 space-y-2"></div>
+        </div>
+    </main>
+</div>
+
+<!-- Modal -->
+<div id="resultModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 hidden">
+    <div class="bg-white dark:bg-gray-800 w-full max-w-3xl mx-auto rounded-lg shadow-xl p-8 relative">
+        <button onclick="closeModal()" class="absolute top-2 right-3 text-xl text-red-500 font-bold">&times;</button>
+        <h3 class="text-xl font-semibold mb-4">Student Analysis Result</h3>
+        <div id="modalContent" class="text-sm text-gray-800 dark:text-gray-100"></div>
     </div>
-</body>
-
-    </div>
-</aside>
-
-
-    <script>
-        const apiUrl = "http://127.0.0.1:5000"; // Flask Backend URL
-        let pieChart, barChart;
-
-        // Function to Upload CSV
-        function uploadCSV() {
-            let fileInput = document.getElementById('csvFile');
-            let file = fileInput.files[0];
-
-            if (!file) {
-                alert("❌ Please select a file.");
-                return;
-            }
-
-            let formData = new FormData();
-            formData.append("file", file);
-
-            fetch(`${apiUrl}/upload`, { method: "POST", body: formData })
-            .then(response => response.json())
-            .then(data => {
-                alert("✅ File uploaded successfully!");
-                fetchStudentList();
-                setTimeout(generateCharts, 3000);
-            })
-            .catch(error => console.error("❌ Upload Error:", error));
-        }
-
-        // Function to Fetch Student List from Flask API
-        function fetchStudentList() {
-    fetch(`${apiUrl}/students`)
-        .then(response => response.json())
-        .then(data => {
-            let studentList = document.getElementById("studentList");
-            studentList.innerHTML = "";  // Clear any previous list
-
-            data.forEach(student => {
-                let listItem = document.createElement("li");
-                listItem.classList.add("student-item", "flex", "justify-between", "items-center", "p-4", "bg-gray-800", "text-white", "rounded-lg", "mb-4");
-                
-                // HTML for each student entry
-                listItem.innerHTML = `
-                    <div class="student-info">
-                        <span class="student-name">${student["STUDENT NAME"]} (ID: ${student["STUDENT ID"]})</span>
-                        <p class="most-dominant-trait">Most Dominant Trait: Openness</p> <!-- Update dynamically as per your data -->
-                    </div>
-                    <button class="btn-analyze bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600" onclick="analyzeStudent(${student['STUDENT ID']})">Analyze</button>
-                `;
-                
-                studentList.appendChild(listItem);  // Append student list item to the list
-            });
-        })
-        .catch(error => console.error("Error fetching student data:", error));
-}
-
-        // Function to Analyze Individual Student
-        function analyzeStudent(studentId) {
-            fetch(`${apiUrl}/assess/individual?student_id=${studentId}`)
-            .then(response => response.json())
-            .then(data => {
-                document.getElementById("analysisResult").innerHTML = data.result;
-                fetchRecommendation(studentId); // Fetch AI recommendation for the student
-            })
-            .catch(error => console.error("Error analyzing student:", error));
-        }
-
-        // Function to Analyze All Students
-        function analyzeAll() {
-            fetch(`${apiUrl}/assess/all`)
-            .then(response => response.json())
-            .then(data => {
-                document.getElementById("analysisResult").innerHTML = data.result;
-                fetchDashboardStats();
-            })
-            .catch(error => console.error("Error analyzing all students:", error));
-        }
-
-        // Function to Fetch AI Recommendations for All Students
-        function fetchAllRecommendations() {
-            fetch(`${apiUrl}/assess/recommendations/all`)
-            .then(response => response.json())
-            .then(data => {
-                let recommendationsDiv = document.getElementById("recommendations");
-                let output = "<ul>";
-                data.forEach(student => {
-                    output += `
-                        <li>
-                            <strong>Student ID:</strong> ${student.student_id} - 
-                            <strong>Trait:</strong> ${student.dominant_trait}<br>
-                            <strong>Recommendation:</strong> ${student.recommendation}
-                        </li><br>
-                    `;
-                });
-                output += "</ul>";
-                recommendationsDiv.innerHTML = output;
-            })
-            .catch(error => console.error("Error fetching all recommendations:", error));
-        }
-
-        // Function to Fetch and Update Dashboard Stats
-        function fetchDashboardStats() {
-            fetch(`${apiUrl}/dashboard/stats`)
-            .then(response => response.json())
-            .then(data => {
-                document.getElementById("totalSurveys").innerText = data.totalSurveys;
-
-                let dominantTraitsDiv = document.getElementById("dominantTraits");
-                dominantTraitsDiv.innerHTML = "";
-
-                Object.keys(data.dominantTraitCount).forEach(trait => {
-                    let total = data.dominantTraitCount[trait].total;
-                    let ids = data.dominantTraitCount[trait].ids.join(", ");
-                    let traitBox = document.createElement("div");
-
-                    traitBox.classList.add("trait-box");
-                    traitBox.innerHTML = `
-                        <h4>${trait.toUpperCase()}</h4>
-                        <p>${total} / ${data.totalSurveys} students</p>
-                        <small>ID Nos: ${ids}</small>
-                    `;
-                    dominantTraitsDiv.appendChild(traitBox);
-                });
-
-                updateBarChart(data.traitAverages);
-            })
-            .catch(error => console.error("Error fetching dashboard stats:", error));
-        }
-
-        // Function to Generate and Update Bar Chart
-        function generateCharts() {
-            fetch(`${apiUrl}/assess/ocean-averages`)
-            .then(response => response.json())
-            .then(data => {
-                if (!data || Object.keys(data).length === 0) {
-                    console.error("❌ No data received for charts!");
-                    return;
-                }
-
-                const traitLabels = Object.keys(data);
-                const traitScores = Object.values(data);
-                const traitColors = ["red", "blue", "yellow", "green", "purple"];
-
-                if (barChart) {
-                    barChart.destroy();
-                }
-
-                const barCtx = document.getElementById("barChart").getContext("2d");
-                barChart = new Chart(barCtx, {
-                    type: 'bar',
-                    data: {
-                        labels: traitLabels,
-                        datasets: [{
-                            label: "Average Scores",
-                            data: traitScores,
-                            backgroundColor: traitColors
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        scales: {
-                            y: { beginAtZero: true, max: 5 }
-                        }
-                    }
-                });
-
-                console.log("✅ Graphs successfully updated with:", data);
-            })
-            .catch(error => console.error("❌ ERROR: Graphs not updating! Check backend.", error));
-        }
-
-        // Function to Fetch AI Recommendation for a Student
-        function fetchRecommendation(studentId) {
-            fetch(`${apiUrl}/assess/recommendations?student_id=${studentId}`)
-            .then(response => response.json())
-            .then(data => {
-                document.getElementById("recommendations").innerHTML = `
-                    <strong>Most Dominant Trait:</strong> ${data.dominant_trait}<br>
-                    <strong>Recommendation:</strong> ${data.recommendation}
-                `;
-            })
-            .catch(error => console.error("Error fetching AI recommendation:", error));
-        }
-
-        // Initialize the page by fetching students and generating charts
-        document.addEventListener("DOMContentLoaded", function () {
-            fetchStudentList();
-            setTimeout(generateCharts, 2000);
-        });
-    </script>
-
+</div>
 </body>
 </html>

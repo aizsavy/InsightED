@@ -3,19 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI-Powered Student Analysis</title>
-    <link rel="stylesheet" href="{{ asset('css/app.css') }}"> <!-- Adjust if needed -->
+    <title>@yield('title', 'INSIGHTED - Student Personality Dashboard')</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
+    @vite(['resources/css/app.css'])
 </head>
-<body>
+<body class="main-layout bg-gray-100">
+    <div class="main-layout">
+        @include('components.sidebar')
 
-    <nav>
-        <h2>AI-Powered Student Analysis</h2>
-    </nav>
-
-    <div class="container">
-        @yield('content')  <!-- This is where child views will be inserted -->
+        <main class="dashboard-container pattern-wavy">
+            @yield('content')
+        </main>
     </div>
 
-    <script src="{{ asset('js/dashboard.js') }}"></script>
+    @yield('scripts')
 </body>
 </html>
